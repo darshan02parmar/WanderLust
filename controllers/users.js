@@ -35,6 +35,8 @@ module.exports.renderLoginForm= (req, res) => {
 module.exports.login=(req, res) => {
   req.flash("success", "Successfully logged in!");
   let redirectUrl = res.locals.redirectUrl || "/listings";
+  console.log("Login successful - redirecting to:", redirectUrl);
+  console.log("Saved redirectUrl was:", req.session.redirectUrl);
   delete req.session.redirectUrl;
   res.redirect(redirectUrl);
 };
