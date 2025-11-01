@@ -113,7 +113,12 @@ module.exports.updateListing = async (req, res) => {
         q: location,
         format: 'json',
         limit: 1
+      },
+      headers: {
+          'User-Agent': 'WanderlustApp/1.0 (github.com/darshan02parmar)', // Nominatim requires a valid User-Agent
+          'Accept-Language': 'en'
       }
+      
     });
     if (response.data.length > 0) {
       listing.geometry = {
