@@ -1,0 +1,381 @@
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container{
+    flex: 1;
+}
+.navbar{
+    height: 5rem;
+    background:white;
+}
+.fa-compass{
+    color: #fe424d;
+    font-size: 2rem;
+}
+.nav-link{
+    color: #222222 !important;
+}
+
+/* Footer */
+.f-info-links a {
+    text-decoration: none;
+    color: #222222;
+}
+
+.f-info-links,
+.f-info-socials,
+.f-info-brand {
+    width: 100%;
+    text-align: center;
+    padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-info-links a:hover {
+    text-decoration: underline;
+    color: #222222 !important;
+}
+
+.f-info-socials i {
+    font-size: 1.2rem;
+    margin-right: 1rem;   
+}
+
+.f-info {
+    text-align: center;
+    height: 8rem;
+    background-color: #ebebeb;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    align-items: space-evenly;          
+}
+/* Card */
+
+.listing-card{
+    border: none !important;
+    margin-bottom: 1rem;
+}
+.listing-index-img {
+  height: 15rem !important;
+}
+.card img-top{
+    width: 100% !important;
+    border-radius: 2rem !important;
+    object-fit: cover !important;
+    border-radius: 3rem !important;
+}
+
+img.card-img-top.show-img{
+  display: block;
+position: static;
+width: 654.675px;
+height: 336px;
+max-width: none;
+max-height: none;
+object-fit: cover;
+object-position: 50% 50%;
+border: 0px none rgb(33, 37, 41);
+border-radius: 16px;
+padding: 0px;
+margin: 0px;
+box-shadow: none;
+filter: none;
+opacity: 1;
+z-index: auto;
+}
+.card.show-card.listing-card{
+  display: flex;
+position: relative;
+width: 654.675px;
+height: 616px;
+padding: 0px;
+margin: 0px;
+border: 0px none rgb(33, 37, 41);
+border-radius: 6px;
+box-shadow: none;
+background-color: rgb(255, 255, 255);
+overflow: visible;
+z-index: auto;
+flex-direction: column;
+justify-content: normal;
+align-items: normal;
+gap: normal;
+}
+.card-body {
+    padding: 0 !important;
+    
+}
+.card-text{
+    font-weight: 400;
+}
+.listing-link{
+    text-decoration: none;
+}
+/* Card Effect */
+.card-img-overlay {
+    opacity: 0;    
+}
+.card-img-overlay:hover {
+    opacity: 0.2;
+    background-color: white;
+}
+/* NEW */
+.add-btn{
+   background-color:#fe424d;
+   border: none !important;
+}
+/* edit */
+.edit-btn{
+    background-color:#fe424d;
+   border: none !important;
+}
+
+/* show Page */
+.show-img{
+    height: 40vh;
+}
+@media (max-width: 1300px) {
+    .show-img {
+        height: 18rem;
+    }
+}
+@media (max-width: 1500px) {
+    .show-img {
+        height: 22rem;
+    }
+}
+@media (max-width: 1700px) {
+    .show-img {
+        height: 25rem;
+    }
+}
+@media (max-width: 2000px) {
+    .show-img {
+        height: 28rem;
+    }
+}
+.btns{
+    display: flex;
+}
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
+}
+#map, .leaflet-container {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+@media (max-width: 600px) {
+  #map, .leaflet-container {
+    height: 220px !important;
+    min-height: 180px !important;
+  }
+}
+
+/* Hide inline GST text on cards */
+.tax-info {
+  display: none;
+}
+
+/* When the switch is OFF we add .tax-show on <body> to reveal GST */
+.tax-show .tax-info{
+  display: inline;
+}
+
+/* Navbar search styles */
+.nav-search {
+  margin-left: 25rem;
+}
+/* The main search button */
+.search-btn {
+  background-color: #fe424d;
+  color: #fff;
+  border-radius: 25rem;
+  padding: 0 1rem 0 1rem;
+}
+
+/* The button's hover state */
+.search-btn:hover {
+  background-color: #fe424d;
+  color: #fff;
+}
+
+/* The button's active (clicked) state */
+.search-btn:active {
+  background-color: #fe424d !important;
+  color: #fff !important;
+}
+
+/* The icon inside the search button */
+.search-btn i {
+  display: inline;
+  margin-right: 0.5rem;
+}
+
+/* The search input field */
+.search-inp {
+  margin-left: 1.25rem;
+  border-radius: 25rem; 
+  font-size: 0.9rem;
+  width: 14.5rem;
+}
+
+/* MAP */
+
+ #map {
+        height: 400px;
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+      }
+      @media (max-width: 600px) {
+        #map {
+          height: 220px;
+        }
+      }
+      #map-controls {
+        margin-bottom: 1em;
+        display: flex;
+        gap: 1em;
+      }
+/* offers */
+.offers {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+}
+
+.offers i {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.offers span {
+  font-size: 1.1rem;
+}
+
+/* #filters */
+/* Layout wrapper: chevrons, scrollable filters, tax toggle */
+#filter-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+/* Chevron buttons */
+.scroll-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #6b7280;
+    border-radius: 999px;
+}
+.scroll-btn i{ font-size: 14px; }
+
+/* Scroll area */
+#filters-container{
+    flex: 1 1 auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;    /* Firefox */
+}
+#filters-container::-webkit-scrollbar{ display: none; }
+
+/* Row of filters */
+#filters{
+    display: inline-flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 0 0.25rem;
+    width: max-content; /* make row exceed container to enable scroll */
+}
+
+.filter{
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  min-width: 72px;
+  text-align: center;
+}
+.filter a{ color: #6b7280; text-decoration: none; }
+.filter a:hover{ color: #111827; }
+.filter i{ font-size: 18px; color: #6b7280; }
+.filter p{ font-size: 0.9rem; margin: 0; white-space: nowrap; color: #6b7280; }
+
+/* Tax toggle (final minimal rules) */
+.tax-toggle {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;          /* don't shrink */
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  margin-top: 0.9rem;
+  margin-bottom: 1rem;
+  font-size: 1 rem;
+  /* border: 0.1rem solid #a6a6a6;
+  border-radius: 1rem; */
+  padding: 0.5rem;         /* wrapper breathing room */
+}
+
+.toggle-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid #a6a6a6;
+  border-radius: 0.7rem;
+  flex-shrink: 0;          /* prevent collapse */
+  white-space: nowrap;
+}
+
+@media (max-width: 600px){
+  #filter-wrapper{ gap: 0.5rem; padding: 0.5rem 0.75rem; }
+  #filters{ gap: 1.25rem; }
+  .filter i{ font-size: 24px; }
+  .filter p{ font-size: 0.85rem; }
+  .scroll-btn{ width: 32px; height: 32px; }
+} 
+
+@media (max-width: 768px) {
+  /* .tax-toggle {
+    flex-basis: 100%;
+    text-align: left;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    font-size: 0.8rem !important;
+    width: auto !important;
+    border: none;
+    justify-content: center;
+  }  */
+
+  /* .toggle-container {
+    padding: 0.5rem 1rem;
+    border: 0.1rem solid #a6a6a6;
+    border-radius: 0.7rem;
+  } */
+}

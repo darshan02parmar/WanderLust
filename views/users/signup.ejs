@@ -1,0 +1,76 @@
+<% layout('layouts/boilerplate') %>
+<div class="row mt-3">
+  <div class="col-8 offset-2">
+    <h3>Sign Up</h3>
+    <br>
+    <form action="/signup" method="post" novalidate class="needs-validation">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          required
+          minlength="3"
+          maxlength="30"
+          pattern="[a-zA-Z0-9]+"
+          placeholder="Choose a username (3-30 characters, letters and numbers only)"
+        />
+        <div class="valid-feedback">Username looks good!</div>
+        <div class="invalid-feedback">Username must be 3-30 characters long and contain only letters and numbers.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          required
+          placeholder="Enter your email"
+        />  
+        <div class="valid-feedback">Email looks good!</div>
+        <div class="invalid-feedback">Please provide a valid email address.</div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          required
+          minlength="6"
+          placeholder="Create a password (minimum 6 characters)"
+        />
+        <div class="valid-feedback">Password looks good!</div>          
+        <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+  </div>
+</div>
+
+<script>
+// Bootstrap form validation
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+
