@@ -19,17 +19,16 @@ const User = require('./models/user');
 
 
 const dbUrl=process.env.ATLASDB_URL;
-main()
-    .then(() =>{
-         console.log("connected to MongoDB");
-    })
-    .catch((err)=>{
-        console.error(err);
-    });
 
-async function main(){
-    await mongoose.connect(dbUrl);
+// MongoDB connection
+async function main() {
+  if (!dbUrl) {
+    throw new Error("ATLASDB_URL environment variable is not set!");
+  }
+  await mongoose.connect(dbUrl);
+  console.log("Connected to MongoDB Atlas successfully!");
 }
+main().catch(err => console.error("MongoDB Connection Error:", err));
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"/views"));
@@ -39,21 +38,9 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-
-async function main() {
-  await mongoose.connect(dbUrl, {
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-    ssl: true,
-  tlsAllowInvalidCertificates: true,  
-  });
-  console.log("Connected to MongoDB Atlas successfully!");
-}
-main().catch(err => console.error(" MongoDB Connection Error:", err));
-
 const store=MongoStore.create({
     mongoUrl:dbUrl,
-    cryptor:{
+    crypto:{
         secret:process.env.SECRET
     },
     touchAfter:24*60*60 // time period in seconds
@@ -68,9 +55,10 @@ const sessionOption={
     resave:false,
     saveUninitialized:true,
     cookie: {
-        expires:Date.now()+7 * 24 * 60 * 60 * 1000, // 7 days
-        maxAge:7 * 24 * 60 * 60 * 1000,
-        httponly:true
+        maxAge:7 * 24 * 60 * 60 * 1000, // 7 days
+        httpOnly:true,
+        secure: process.env.NODE_ENV === "production", // secure cookies in production
+        sameSite: 'lax'
     }
 }
 // app.get("/",(req,res)=>{
@@ -109,6 +97,11 @@ app.use("/listings/:id/reviews", reviews);
 const listings= require("./routes/listing.js"); // Express Router
 app.use("/listings", listings);
 
+// Root route - redirect to listings (must be before user routes mounted at "/")
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+
 const users = require("./routes/user.js"); // Express Router
 app.use("/", users);
 
@@ -127,6 +120,8 @@ app.use((err, req, res, next) => {
 });
 
 
-app.listen(8080,()=>{
-    console.log("Server is running on port 8080");
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT,()=>{
+    console.log(`Server is running on port ${PORT}`);
 });
