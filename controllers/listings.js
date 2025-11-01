@@ -116,10 +116,16 @@ module.exports.updateListing = async (req, res) => {
       },
       headers: {
           'User-Agent': 'WanderlustApp/1.0 (github.com/darshan02parmar)', // Nominatim requires a valid User-Agent
-          'Accept-Language': 'en'
-      }
+          'Accept-Language': 'en',
+          "referer": "https://wanderlust-ixst.onrender.com/listings"
+      }, timeout: 5000
       
     });
+     if (!response.data || response.data.length === 0) {
+    throw new Error("Location not found");
+  }
+  return response.data[0];
+
     if (response.data.length > 0) {
       listing.geometry = {
         type: 'Point',
