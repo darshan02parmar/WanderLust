@@ -8,7 +8,6 @@ module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         //redirecturl
         req.session.redirectUrl = req.originalUrl;
-        console.log("User not authenticated - saving redirectUrl:", req.originalUrl);
         req.flash("error", "You must be signed in first!");
         return res.redirect("/login");
     }
@@ -18,9 +17,6 @@ module.exports.isLoggedIn = (req, res, next) => {
 module.exports.savedRedirectUrl = (req, res, next) => {
     if (req.session.redirectUrl) {
         res.locals.redirectUrl = req.session.redirectUrl;
-        console.log("Restoring redirectUrl from session:", req.session.redirectUrl);
-    } else {
-        console.log("No redirectUrl in session");
     }
     next();
 }

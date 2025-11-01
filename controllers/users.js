@@ -19,7 +19,7 @@ module.exports.signup=(async(req,res,next)=>{
         console.log(registeredUser);
         req.login(registeredUser,err=>{
             if(err) return next(err);
-            req.flash("success","Successfully signed up!");
+            req.flash("success","Welcome to Wanderlust");
             res.redirect("/listings");
         });
     }catch(e){
@@ -33,19 +33,18 @@ module.exports.renderLoginForm= (req, res) => {
 }
 
 module.exports.login=(req, res) => {
-  req.flash("success", "Successfully logged in!");
+  req.flash("success", "Welcome back!");
+  // const redirectUrl = req.session.redirectUrl || "/listings";
+  delete req.session.returnTo;
   let redirectUrl = res.locals.redirectUrl || "/listings";
-  console.log("Login successful - redirecting to:", redirectUrl);
-  console.log("Saved redirectUrl was:", req.session.redirectUrl);
   delete req.session.redirectUrl;
+ 
   res.redirect(redirectUrl);
 };
 
 module.exports.logout=(req, res, next) => {
-  req.logout(function(err) {
-    if (err) {
-      return next(err);
-    }
+  req.logout((err) => {
+    if (err) return next(err);
     req.flash("success", "You have logged out!");
     res.redirect("/listings");
   });

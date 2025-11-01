@@ -50,7 +50,7 @@ const sessionOption={
     store:store,
     secret:process.env.SECRET,
     resave:false,
-    saveUninitialized:true, // Save session even if not modified (needed for passport)
+    saveUninitialized:true,
     cookie: {
         maxAge:7 * 24 * 60 * 60 * 1000, // 7 days
         httpOnly:true,
@@ -72,6 +72,18 @@ passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+// Middleware to handle session errors gracefully
+app.use((req, res, next) => {
+    // If there's a session error, destroy the session and continue
+    if (req.session && req.session.error) {
+        req.session.destroy(() => {
+            next();
+        });
+    } else {
+        next();
+    }
+});
 
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
