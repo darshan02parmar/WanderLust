@@ -50,7 +50,7 @@ const sessionOption={
     store:store,
     secret:process.env.SECRET,
     resave:false,
-    saveUninitialized:false, // Don't save uninitialized sessions (fixes login loop)
+    saveUninitialized:true, // Save session even if not modified (needed for passport)
     cookie: {
         maxAge:7 * 24 * 60 * 60 * 1000, // 7 days
         httpOnly:true,

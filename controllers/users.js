@@ -20,13 +20,7 @@ module.exports.signup=(async(req,res,next)=>{
         req.login(registeredUser,err=>{
             if(err) return next(err);
             req.flash("success","Welcome to Wanderlust");
-            req.session.save((err) => {
-                if (err) {
-                    console.error("Session save error:", err);
-                    return res.redirect("/signup");
-                }
-                res.redirect("/listings");
-            });
+            res.redirect("/listings");
         });
     }catch(e){
         req.flash("error",e.message);
@@ -42,24 +36,15 @@ module.exports.login=(req, res) => {
   req.flash("success", "Welcome back!");
   let redirectUrl = res.locals.redirectUrl || "/listings";
   delete req.session.redirectUrl;
-  
-  // Ensure session is saved before redirect
-  req.session.save((err) => {
-    if (err) {
-      console.error("Session save error:", err);
-      return res.redirect("/login");
-    }
-    res.redirect(redirectUrl);
-  });
+  res.redirect(redirectUrl);
 };
 
 module.exports.logout=(req, res, next) => {
-  req.logout((err) => {
-    if (err) return next(err);
-    req.session.destroy((err) => {
-      if (err) return next(err);
-      req.flash("success", "You have logged out!");
-      res.redirect("/listings");
-    });
+  req.logout(function(err) {
+    if (err) {
+      return next(err);
+    }
+    req.flash("success", "You have logged out!");
+    res.redirect("/listings");
   });
 };
