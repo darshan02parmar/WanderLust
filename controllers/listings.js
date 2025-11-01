@@ -45,21 +45,36 @@ module.exports.createListing = async (req, res, next) => {
     } else if (req.body.listing.location) {
       const location = req.body.listing.location;
       // Use Nominatim for geocoding
-      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
-        params: {
-          q: location,
-          format: 'json',
-          limit: 1
+      try {
+        const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+          params: {
+            q: location,
+            format: 'json',
+            limit: 1
+          },
+          headers: {
+            'User-Agent': 'WanderlustApp/1.0 (Contact: https://wanderlust-ixst.onrender.com)', // Nominatim requires a valid User-Agent
+            'Accept-Language': 'en'
+          },
+          timeout: 10000 // 10 second timeout
+        });
+        if (response.data && response.data.length > 0) {
+          newListing.geometry = {
+            type: 'Point',
+            coordinates: [
+              parseFloat(response.data[0].lon),
+              parseFloat(response.data[0].lat)
+            ]
+          };
         }
-      });
-      if (response.data.length > 0) {
-        newListing.geometry = {
-          type: 'Point',
-          coordinates: [
-            parseFloat(response.data[0].lon),
-            parseFloat(response.data[0].lat)
-          ]
-        };
+      } catch (geocodeError) {
+        console.error('Geocoding error:', geocodeError.message);
+        // Continue without geometry if geocoding fails
+        if (geocodeError.response && geocodeError.response.status === 403) {
+          req.flash('error', 'Geocoding service temporarily unavailable. Listing created without coordinates. Please manually add coordinates if needed.');
+        } else {
+          req.flash('error', 'Could not geocode location. Listing created without coordinates.');
+        }
       }
     }
     if (req.file) {
@@ -108,32 +123,36 @@ module.exports.updateListing = async (req, res) => {
   } else if (req.body.listing.location) {
     const location = req.body.listing.location;
     // Use Nominatim for geocoding if not provided
-    const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
-      params: {
-        q: location,
-        format: 'json',
-        limit: 1
-      },
-      headers: {
-          'User-Agent': 'WanderlustApp/1.0 (github.com/darshan02parmar)', // Nominatim requires a valid User-Agent
-          'Accept-Language': 'en',
-          "referer": "https://wanderlust-ixst.onrender.com/listings"
-      }, timeout: 5000
-      
-    });
-     if (!response.data || response.data.length === 0) {
-    throw new Error("Location not found");
-  }
-  return response.data[0];
-
-    if (response.data.length > 0) {
-      listing.geometry = {
-        type: 'Point',
-        coordinates: [
-          parseFloat(response.data[0].lon),
-          parseFloat(response.data[0].lat)
-        ]
-      };
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+        params: {
+          q: location,
+          format: 'json',
+          limit: 1
+        },
+        headers: {
+          'User-Agent': 'WanderlustApp/1.0 (Contact: https://wanderlust-ixst.onrender.com)', // Nominatim requires a valid User-Agent
+          'Accept-Language': 'en'
+        },
+        timeout: 10000 // 10 second timeout
+      });
+      if (response.data && response.data.length > 0) {
+        listing.geometry = {
+          type: 'Point',
+          coordinates: [
+            parseFloat(response.data[0].lon),
+            parseFloat(response.data[0].lat)
+          ]
+        };
+      }
+    } catch (geocodeError) {
+      console.error('Geocoding error:', geocodeError.message);
+      // Continue without geometry if geocoding fails
+      if (geocodeError.response && geocodeError.response.status === 403) {
+        req.flash('error', 'Geocoding service temporarily unavailable. Listing updated without coordinates. Please manually add coordinates if needed.');
+      } else {
+        req.flash('error', 'Could not geocode location. Listing updated without coordinates.');
+      }
     }
   }
   if (typeof req.file != 'undefined') {

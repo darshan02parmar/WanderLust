@@ -34,17 +34,16 @@ module.exports.renderLoginForm= (req, res) => {
 
 module.exports.login=(req, res) => {
   req.flash("success", "Welcome back!");
-  // const redirectUrl = req.session.redirectUrl || "/listings";
-  delete req.session.returnTo;
   let redirectUrl = res.locals.redirectUrl || "/listings";
   delete req.session.redirectUrl;
- 
   res.redirect(redirectUrl);
 };
 
 module.exports.logout=(req, res, next) => {
-  req.logout((err) => {
-    if (err) return next(err);
+  req.logout(function(err) {
+    if (err) {
+      return next(err);
+    }
     req.flash("success", "You have logged out!");
     res.redirect("/listings");
   });
