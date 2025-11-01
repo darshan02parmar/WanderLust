@@ -11,7 +11,7 @@ module.exports.createReview = (async (req, res) => {
     throw new ExpressError("Listing not found", 404);
   }
   let newReview = new Review(req.body.review);
-  newReview.author = res.locals.currentUser._id;
+  newReview.author = res.locals.currUser._id;
   console.log("Created new review:", newReview);
   listing.reviews.push(newReview);
   await newReview.save();
