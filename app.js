@@ -102,6 +102,10 @@ app.get("/", (req, res) => {
 const users = require("./routes/user.js"); // Express Router
 app.use("/", users);
 
+// Test route to check user session
+app.get("/testuser", (req, res) => {
+  res.send(req.user || "No user logged in");
+});
 
 //if no route matches → 404 handler
 app.use((req, res, next) => {
