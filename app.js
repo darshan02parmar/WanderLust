@@ -40,9 +40,6 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 const store=MongoStore.create({
     mongoUrl:dbUrl,
-    crypto:{
-        secret:process.env.SECRET
-    },
     touchAfter:24*60*60 // time period in seconds
 });
 store.on("error",function(e){
@@ -76,10 +73,22 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Middleware to handle session errors gracefully
+app.use((req, res, next) => {
+    // If there's a session error, destroy the session and continue
+    if (req.session && req.session.error) {
+        req.session.destroy(() => {
+            next();
+        });
+    } else {
+        next();
+    }
+});
+
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
-    res.locals.currentUser=req.user;
+    res.locals.currentUser=req.user || null; // Ensure currentUser is always defined
     next();
 });
 
