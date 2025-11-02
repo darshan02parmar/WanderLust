@@ -2,17 +2,26 @@ const mongoose=require("mongoose");
 const initData=require("./data.js");
 const Listing=require("../models/listing.js");
 const ExpressError=require("../utils/ExpressError.js");
-const mongoURL = "mongodb://127.0.0.1:27017/wanderlust";
+
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config();
+}
+
+const dbUrl = process.env.NODE_ENV !== "production" ? "mongodb://127.0.0.1:27017/wanderlust" : process.env.ATLASDB_URL;
+
 main()
     .then(() =>{
-         console.log("connected to MongoDB");
+         console.log(`Connected to MongoDB ${process.env.NODE_ENV !== "production" ? "locally" : "Atlas"} successfully!`);
     })
     .catch((err)=>{
-        console.error(err);
+        console.error("MongoDB Connection Error:", err);
     });
 
 async function main(){
-    await mongoose.connect(mongoURL);
+    if (!dbUrl) {
+      throw new Error("ATLASDB_URL environment variable is not set!");
+    }
+    await mongoose.connect(dbUrl);
 }
 
 const initDB=async()=>{

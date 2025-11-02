@@ -2,7 +2,6 @@ if (process.env.NODE_ENV !== "production") {
   require('dotenv').config();
 }
 
-
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
@@ -18,15 +17,15 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 
-const dbUrl=process.env.ATLASDB_URL;
-
+// const dbUrl = process.env.NODE_ENV !== "production" ? "mongodb://127.0.0.1:27017/wanderlust" : process.env.ATLASDB_URL;
+const dbUrl = process.env.ATLASDB_URL;
 // MongoDB connection
 async function main() {
   if (!dbUrl) {
     throw new Error("ATLASDB_URL environment variable is not set!");
   }
   await mongoose.connect(dbUrl);
-  console.log("Connected to MongoDB Atlas successfully!");
+  console.log(`Connected to MongoDB Atlas successfully!`);
 }
 main().catch(err => console.error("MongoDB Connection Error:", err));
 
@@ -38,8 +37,21 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+// Set default locals
+app.use((req, res, next) => {
+    res.locals.currUser = null;
+    next();
+});
+
+if (!process.env.SECRET) {
+    throw new Error("SECRET environment variable is not set!");
+}
+
 const store=MongoStore.create({
     mongoUrl:dbUrl,
+    crypto: {
+        secret: process.env.SECRET
+    },
     touchAfter:24*60*60 // time period in seconds
 });
 store.on("error",function(e){
@@ -76,7 +88,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
-    res.locals.currUser=req.user;
+    res.locals.currUser=req.user || null;
     next();
 });
 
@@ -117,6 +129,9 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = "Something went wrong" } = err;
     console.error(err); // log full error for debugging
+    res.locals.success = req.flash ? req.flash("success") : [];
+    res.locals.error = req.flash ? req.flash("error") : [];
+    res.locals.currUser = req.user || null;
     res.status(statusCode).render("error.ejs", { message });
 });
 
