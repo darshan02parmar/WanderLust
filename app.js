@@ -37,6 +37,9 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+// Trust proxy for secure cookies in production (Render uses proxy)
+app.set('trust proxy', 1);
+
 // Set default locals
 app.use((req, res, next) => {
     res.locals.currUser = null;
