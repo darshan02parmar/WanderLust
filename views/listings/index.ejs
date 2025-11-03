@@ -143,16 +143,17 @@
             </div>
         </div>
 
-<div class="container my-4">
-  <!-- <h3 class="mb-4">All Listings</h3>  -->
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2">
+<div class="container-fluid px-1 my-4">
+  
+  <!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3"> -->
+     <div class="row row-cols-lg-4 row-cols-adjust">
     <% for (let listing of allListing || []) { %>
       <a href="/listings/<%= listing._id %>" class="listing-link">
       <div class="col listing-card">
         <div class="card h-100 shadow-sm">
           <img src="<%= (listing.image && listing.image.url) || 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3' %>" class="card-img-top" alt="listing image" style="height: 20rem; object-fit: cover;">
           <div class="card-img-overlay"></div>
-          <div class="card-body text-center">
+          <div class="card-body text-start">
             <b> <%= listing.title %></b><br>
             <p class="card-text mb-1">
               <span class="price fw-bold text-success">
@@ -164,6 +165,7 @@
         </div>
       </div>
     <% } %>
+    </div>
   </div>
 </div>
 </div>
