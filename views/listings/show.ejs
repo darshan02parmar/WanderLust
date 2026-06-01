@@ -1,244 +1,271 @@
 <% layout('layouts/boilerplate') %>
-<div class="row mt-3">
-  <div class="col-6 offset-3">
-    <h3 class="mb-3 text-center"><%= listing.title %></h3>
-    <!-- Card -->
-    <div class="card show-card listing-card">
-      <img
-        src="<%= listing.image.url %>"
-        class="card-img-top show-img"
-        alt="listing image"
-        style="object-fit: contain; width: 100%;"
-      />
-      <div class="card-body">
-        <p class="card-text">
-           <!-- <b><%= listing.title %></b><br>  -->
-        <p class="card-text"><i><b>Hosted by:</b> <%= listing.owner.username %></i></p>
-        <p class="card-text"><b>Description: </b> <%= listing.description %></p>
-        <p class="card-text"> <b>Cost: </b>&#8377; <%= listing.price.toLocaleString("en-IN") %></p>
-         <p class="card-text"><b>Location: </b><%= listing.location %></p>
-        <p class="card-text"><b>Country: </b> <%= listing.country %></p>
-        <p class="card-text"><b>Category: </b> <%= listing.category %></p>
-        </p>
-      </div>
-    </div>
-    <!-- Buttons -->
-    <% if(typeof currUser !== 'undefined' && currUser && currUser._id.equals(listing.owner._id)) { %>
-    <div class="d-flex flex-column">
-    <div class="btns mt-3 gap-3">
-      <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark flex-fill">
-        Edit
-      </a>
+<div class="container">
+<div class="row mt-4 show-header">
+  <div class="col-12">
+    <h1 class="show-title"><%= listing.title %></h1>
+    <p class="show-subtitle">
+      <i class="fa-solid fa-star" style="color: #222;"></i> <span class="fw-bold">4.9</span> · 
+      <a href="#reviews" class="text-dark"><%= listing.reviews ? listing.reviews.length : 0 %> reviews</a> · 
+      <%= listing.location %>, <%= listing.country %>
+    </p>
+  </div>
+</div>
 
-      <form action="/listings/<%= listing._id %>?_method=DELETE" method="post" class="flex-fill">
-        <button type="submit" class="btn btn-danger w-100">
-          Delete
-        </button>
-      </form>
+<div class="row">
+  <div class="col-12">
+    <div class="show-img-container">
+      <img src="<%= listing.image.url %>" alt="listing image" />
     </div>
   </div>
-<%}%>
-    <div class="col-6 offset-3">
-      <hr>
+</div>
+
+<div class="row mt-4 mb-5">
+  <div class="col-lg-8 pe-lg-5">
+    <!-- Left Column: Details, Host, Amenities, Reviews -->
+    <div class="host-info">
+      <div class="host-details">
+        <h5>Entire home hosted by <%= listing.owner.username %></h5>
+        <p>4 guests · 2 bedrooms · 3 beds · 2 bathrooms</p>
+      </div>
+      <div class="host-avatar ms-auto"><%= listing.owner.username.charAt(0).toUpperCase() %></div>
     </div>
     
-    <!-- What this place offers -->
-    <div class="mt-3">
-      <h4>What this place offers</h4>
-      <div class="offers">
-        <i class="ri-restaurant-line"><span> Kitchen</span></i>
-        <i class="ri-car-fill"><span> Parking</span></i>
-        <i class="ri-t-shirt-air-fill"><span> Air conditioning</span></i>
-        <i class="ri-tv-2-line"><span> TV</span></i>
-        <i class="ri-vidicon-line"><span> Security cameras</span></i>
-        <i class="ri-wifi-line"><span> Wifi</span></i>
-      </div>
-      <div class="d-flex justify-content-center mt-2">
-        <button id="offers" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Show all amenities
-        </button>
-      </div>
+    <div class="description-text">
+      <p><%= listing.description %></p>
+      <p class="mt-3"><span class="fw-bold">Category:</span> <%= listing.category %></p>
+    </div>
 
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">What this place offers</h1>
-            </div>
-            <div class="modal-body">
-              <ul>
-                <h5>Scenic views</h5>
-                <li>Lake view</li>
-                <li>Mountain view</li>
-                <li>Pool view</li>
-                <hr />
-              </ul>
-              <ul>
-                <h5>Bathrooms</h5>
-                <li>Cleaning products</li>
-                <li>Shampoo</li>
-                <li>Hot Water</li>
-                <hr />
-              </ul>
-              <ul>
-                <h5>Bedroom and laundry</h5>
-                <li>Essentials</li>
-                <li>Hangers</li>
-                <li>Bed linen</li>
-                <hr />
-              </ul>
-              <ul>
-                <h5>Entertainment</h5>
-                <li>TV with standard cable/satellite</li>
-                <li>Sound system with Bluetooth and aux</li>
-                <li>Pool table</li>
-                <hr />
-              </ul>
-              <ul>
-                <h5>Outdoor</h5>
-                <li>Patio or balcony</li>
-                <li>Garden</li>
-                <li>Hammock</li>
-                <li>Firepit</li>
-                <li>BBQ grill</li>
-                <hr />
-              </ul>
-              <ul>
-                <h5>Kitchen and dining</h5>
-                <li>Dishes and cutlery</li>
-                <li>Barbecue utensils</li>
-                <li>Dining table</li>
-                <li>Freezer</li>
-                <hr />
-              </ul>
-              <ul>
-                <h5>Locations Features</h5>
-                <li>Waterfront</li>
-                <p>Right next to a body of water</p>
-                <li>Lake access</li>
-                <p>Guests can get to a lake using a path or dock</p>
-                <li>Private entrance</li>
-                <p>Separate street or building entrance</p>
-              </ul>
-              <ul>
-                <h6>and many more...</h6>
+    <hr class="my-5" style="opacity: 0.1;">
+    
+    <h4 class="fw-bold mb-4">What this place offers</h4>
+    <div class="offers-grid">
+      <div class="offer-card"><i class="ri-restaurant-line"></i> Kitchen</div>
+      <div class="offer-card"><i class="ri-car-fill"></i> Free Parking</div>
+      <div class="offer-card"><i class="ri-t-shirt-air-fill"></i> AC</div>
+      <div class="offer-card"><i class="ri-tv-2-line"></i> TV</div>
+      <div class="offer-card"><i class="ri-vidicon-line"></i> Security Cameras</div>
+      <div class="offer-card"><i class="ri-wifi-line"></i> Fast Wifi</div>
+    </div>
+    <div class="d-flex mt-4">
+      <button id="offers" type="button" class="btn btn-outline-dark fw-bold px-4 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Show all amenities
+      </button>
+    </div>
+
+    <!-- Modal for amenities -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg);">
+          <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+            <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">What this place offers</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body px-4 py-4">
+            <!-- Amenities Lists -->
+            <div class="mb-4">
+              <h5 class="fw-bold mb-3">Scenic views</h5>
+              <ul class="list-unstyled">
+                <li class="mb-2 pb-2 border-bottom">Lake view</li>
+                <li class="mb-2 pb-2 border-bottom">Mountain view</li>
+                <li class="mb-2 pb-2 border-bottom">Pool view</li>
               </ul>
             </div>
-            <div class="modal-footer d-flex justify-content-center">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            <div class="mb-4">
+              <h5 class="fw-bold mb-3">Bathrooms</h5>
+              <ul class="list-unstyled">
+                <li class="mb-2 pb-2 border-bottom">Cleaning products</li>
+                <li class="mb-2 pb-2 border-bottom">Shampoo</li>
+                <li class="mb-2 pb-2 border-bottom">Hot Water</li>
+              </ul>
             </div>
+            <div class="mb-4">
+              <h5 class="fw-bold mb-3">Bedroom and laundry</h5>
+              <ul class="list-unstyled">
+                <li class="mb-2 pb-2 border-bottom">Essentials</li>
+                <li class="mb-2 pb-2 border-bottom">Hangers</li>
+                <li class="mb-2 pb-2 border-bottom">Bed linen</li>
+              </ul>
+            </div>
+            <p class="fw-bold text-muted">and many more...</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-6 offset-3">
-      <hr>
-    </div>
 
-  
-  <div>
-  <hr>
-  <% if(typeof currUser !== 'undefined' && currUser){%>
-  <h4>Leave a Review</h4>
-  <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
-  <div class="mb-3 mt-3">
-     <label for="rating" class="form-label">Rating</label>
-    <fieldset class="starability-grow">
-  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
-  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-  <label for="first-rate1" title="Terrible">1 star</label>
-  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-  <label for="first-rate2" title="Not good">2 stars</label>
-  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-  <label for="first-rate3" title="Average">3 stars</label>
-  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-  <label for="first-rate4" title="Very good">4 stars</label>
-  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-  <label for="first-rate5" title="Amazing">5 stars</label>
-</fieldset>
-    <div class="mb-6 mt-3">
-      <label for="review" class="form-label">Comments</label>
-      <textarea class="form-control" id="review" name="review[comment]" rows="3" required></textarea>
-    <div class="invalid-feedback">
-      Please provide a comment.
-    </div>
-    </div><br>
-    <button type="submit" class="btn btn-primary">Submit Review</button>
-  </form>
-  <hr/>
-  <% } %>
-   <div class="col-6 offset-3">
-       
-   </div>
-  <% if(listing.reviews.length> 0){ %>
+    <hr class="my-5" style="opacity: 0.1;">
 
-  <p><b>All Reviews</b></p>
-   
-  <div class="row">
-  <% for(review of listing.reviews) { %>
-    <div class="card col-5 mb-3 ms-3">
-      <div class="card-body d-flex flex-column">
-        <h5 class="card-title">@<%=review.author.username%></h5>
-        <p class="starability-result card-text" data-rating="<%= review.rating %>">
-  </p>
-        <p class="card-text"><%= review.comment %></p>
-        
-        <div class="mt-auto d-flex justify-content-end">
-          <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
-            method="POST">
-            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+    <div id="reviews">
+      <% if(typeof currUser !== 'undefined' && currUser){%>
+        <div class="review-form-card mb-5">
+          <h4 class="fw-bold mb-4">Leave a Review</h4>
+          <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+            <div class="mb-4">
+              <label class="form-label fw-bold">Rating</label>
+              <fieldset class="starability-grow">
+                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
+                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                <label for="first-rate1" title="Terrible">1 star</label>
+                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                <label for="first-rate2" title="Not good">2 stars</label>
+                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                <label for="first-rate3" title="Average">3 stars</label>
+                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                <label for="first-rate4" title="Very good">4 stars</label>
+                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                <label for="first-rate5" title="Amazing">5 stars</label>
+              </fieldset>
+            </div>
+            <div class="mb-4">
+              <label for="review" class="form-label fw-bold">Comments</label>
+              <textarea class="form-control bg-white" id="review" name="review[comment]" rows="4" required placeholder="Share your experience..."></textarea>
+              <div class="invalid-feedback">Please provide a comment.</div>
+            </div>
+            <button type="submit" class="btn btn-primary px-4 rounded-pill">Submit Review</button>
           </form>
         </div>
+      <% } %>
+
+      <% if(listing.reviews && listing.reviews.length > 0){ %>
+        <h4 class="fw-bold mb-4"><i class="fa-solid fa-star"></i> 4.9 · <%= listing.reviews.length %> Reviews</h4>
+        <div class="row g-4">
+          <% for(review of listing.reviews) { %>
+            <div class="col-md-6">
+              <div class="review-card">
+                <div class="review-header">
+                  <div class="host-avatar" style="width: 44px; height: 44px; font-size: 1.1rem;"><%= review.author.username.charAt(0).toUpperCase() %></div>
+                  <div>
+                    <h6 class="review-author"><%=review.author.username%></h6>
+                    <p class="review-date m-0">October 2023</p>
+                  </div>
+                </div>
+                <p class="starability-result mb-3 mt-2" data-rating="<%= review.rating %>"></p>
+                <p class="review-text"><%= review.comment %></p>
+                <% if(typeof currUser !== 'undefined' && currUser && currUser._id.equals(review.author._id)) { %>
+                  <div class="mt-4 text-end">
+                    <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                      <button type="submit" class="btn btn-sm btn-outline-danger px-3 rounded-pill fw-bold">Delete</button>
+                    </form>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mt-5 mt-lg-0">
+    <!-- Right Column: Booking Card & Map -->
+    <div class="booking-card">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+        <div>
+          <span class="booking-price">&#8377; <%= listing.price.toLocaleString("en-IN") %></span>
+          <span class="text-muted">night</span>
+        </div>
+        <div class="fw-bold fs-5"><i class="fa-solid fa-star"></i> 4.9</div>
+      </div>
+      
+      <% if(typeof currUser !== 'undefined' && currUser && currUser._id.equals(listing.owner._id)) { %>
+        <div class="d-flex flex-column gap-3 mt-4">
+          <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark w-100 py-3 fw-bold rounded-pill shadow-sm">Edit Listing</a>
+          <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
+            <button type="submit" class="btn btn-outline-danger w-100 py-3 fw-bold rounded-pill">Delete Listing</button>
+          </form>
+        </div>
+      <% } else { %>
+        <button class="reserve-btn py-3 rounded-pill">Reserve</button>
+        <p class="text-center text-muted mt-3 mb-0" style="font-size: 0.9rem;">You won't be charged yet</p>
+        
+        <div class="mt-4 pt-4 border-top">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">&#8377; <%= listing.price.toLocaleString("en-IN") %> x 5 nights</span>
+                <span>&#8377; <%= ((listing.price || 0) * 5).toLocaleString("en-IN") %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Cleaning fee</span>
+                <span>&#8377; 1,200</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                <span class="text-muted">WanderLust service fee</span>
+                <span>&#8377; 3,500</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold fs-5">
+                <span>Total before taxes</span>
+                <span>&#8377; <%= ((listing.price || 0) * 5 + 1200 + 3500).toLocaleString("en-IN") %></span>
+            </div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Map Section -->
+    <div class="mt-5 pt-4">
+      <h4 class="fw-bold mb-2">Where you'll be</h4>
+      <p class="text-muted mb-4"><%= listing.location %>, <%= listing.country %></p>
+      
+      <div class="map-wrapper">
+        <div id="map-controls">
+          <button id="locate-btn" type="button" class="locate-btn"><i class="fa-solid fa-location-crosshairs"></i> Locate</button>
+        </div>
+        <% if (listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates[0] && listing.geometry.coordinates[1]) { %>
+          <div id="map"></div>
+        <% } else { %>
+          <div class="alert alert-warning m-0 border-0 rounded-0 p-4 text-center">Location not available for this listing.</div>
+        <% } %>
       </div>
     </div>
-  <%}%>
-</div>
-<% } %>
-</div>  
+  </div>
 </div>
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    
-<div id="map-controls">
-  <button id="locate-btn" type="button" class="btn btn-secondary btn-sm">Locate Me</button>
-</div>
-<h4>Where you'll be</h4>
-<% if (listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates[0] && listing.geometry.coordinates[1]) { %>
-  <div id="map"></div>
-<% } else { %>
-  <div class="alert alert-warning">Location not available for this listing.</div>
-<% } %>
-   
-
- <!-- Leaflet JS -->
- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
- <script>
- const listingCoordinates = <%- JSON.stringify((listing?.geometry?.coordinates &&
-  Array.isArray(listing.geometry.coordinates) &&
-  listing.geometry.coordinates.length === 2) ?
-  listing.geometry.coordinates : null)
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+const listingCoordinates = <%- JSON.stringify((listing?.geometry?.coordinates &&
+ Array.isArray(listing.geometry.coordinates) &&
+ listing.geometry.coordinates.length === 2) ?
+ listing.geometry.coordinates : null)
 %>;
- if (listingCoordinates && listingCoordinates[0] && listingCoordinates[1]) {
-   const latitude = listingCoordinates[1];
-   const longitude = listingCoordinates[0];
-   const map = L.map('map', { scrollWheelZoom: false }).setView([latitude, longitude], 13);
-   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-     attribution: '&copy; OpenStreetMap contributors'
-   }).addTo(map);
-   // Marker with details popup
-   const popupHTML = `<b><%= listing.title %></b><br><img src="<%= listing.image.url %>" alt="image" style="height:40px;width:60px;object-fit:cover;border-radius:4px;"/><br>Price: ₹<%= listing.price.toLocaleString('en-IN') %>`;
-   L.marker([latitude, longitude])
-    .addTo(map)
-    .bindPopup(popupHTML)
-    .openPopup();
-   map.zoomControl.setPosition('bottomright');
-   // Locate control
-   document.getElementById('locate-btn').onclick = function() {
-     map.locate({ setView: true, maxZoom: 15 });
-   };
-   map.on('locationerror', function() {
-     alert('Could not determine your location.');
-   });
- }
- </script>
+
+if (listingCoordinates && listingCoordinates[0] && listingCoordinates[1]) {
+  const latitude = listingCoordinates[1];
+  const longitude = listingCoordinates[0];
+  const map = L.map('map', { scrollWheelZoom: false, zoomControl: false }).setView([latitude, longitude], 13);
+  
+  L.control.zoom({ position: 'topright' }).addTo(map);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+  }).addTo(map);
+
+  // Custom premium marker using font-awesome
+  const customIcon = L.divIcon({
+    className: 'custom-map-marker',
+    html: '<div style="background: #fe424d; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(254,66,77,0.4);"><i class="fa-solid fa-house"></i></div>',
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+    popupAnchor: [0, -20]
+  });
+
+  const popupHTML = `
+    <div style="text-align: center; font-family: 'Plus Jakarta Sans', sans-serif;">
+      <b style="font-size: 1.1rem; display: block; margin-bottom: 5px;"><%= listing.title %></b>
+      <img src="<%= listing.image.url %>" alt="image" style="height:100px;width:150px;object-fit:cover;border-radius:8px;margin-bottom:8px;"/><br>
+      <span style="font-weight: 600;">₹<%= listing.price.toLocaleString('en-IN') %> / night</span>
+    </div>
+  `;
+
+  L.marker([latitude, longitude], {icon: customIcon})
+   .addTo(map)
+   .bindPopup(popupHTML);
+
+  document.getElementById('locate-btn').onclick = function() {
+    map.locate({ setView: true, maxZoom: 15 });
+  };
+  
+  map.on('locationerror', function() {
+    alert('Could not determine your location.');
+  });
+}
+</script>
+</div>

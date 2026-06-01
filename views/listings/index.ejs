@@ -133,40 +133,43 @@
                 </div>
             </div>
             <button class="scroll-btn right-btn"><i class="fa-solid fa-greater-than"></i></button>
-            <div class="tax-toggle">
-                <div class="toggle-container">
-                    <div class="form-check-reverse form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+            <div class="tax-toggle ms-auto">
+                <div class="toggle-container d-flex align-items-center">
+                    <label class="form-check-label fw-bold me-2" for="flexSwitchCheckDefault" style="white-space: nowrap; font-size: 0.95rem; cursor: pointer;">Display total after taxes</label>
+                    <div class="form-check form-switch m-0 p-0 d-flex align-items-center">
+                        <input class="form-check-input m-0 fs-5 shadow-none" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="cursor: pointer;">
                     </div>
                 </div>
             </div>
         </div>
 
-<div class="container-fluid px-1 my-4">
-  
-  <!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3"> -->
-     <div class="row row-cols-lg-4 row-cols-adjust">
+<div class="container-fluid px-5 my-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-4">
     <% for (let listing of allListing || []) { %>
-      <a href="/listings/<%= listing._id %>" class="listing-link">
-      <div class="col listing-card">
-        <div class="card h-100 shadow-sm">
-          <img src="<%= (listing.image && listing.image.url) || 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3' %>" class="card-img-top" alt="listing image" style="height: 20rem; object-fit: cover;">
-          <div class="card-img-overlay"></div>
-          <div class="card-body text-start">
-            <b> <%= listing.title %></b><br>
-            <p class="card-text mb-1">
-              <span class="price fw-bold text-success">
-                &#8377; <%= (listing.price && listing.price.toLocaleString("en-IN")) || '0' %>/Day
-                <i class="tax-info">&nbsp; &nbsp; + 18% GST</i>
-              </span>
-            </p>
-          </div>
+      <div class="col">
+        <div class="listing-card">
+          <a href="/listings/<%= listing._id %>" class="listing-link">
+            <div class="card-wrapper">
+              <div class="img-container">
+                <img src="<%= (listing.image && listing.image.url) || 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3' %>" alt="listing image">
+                <button class="wishlist-btn" onclick="event.preventDefault(); this.style.color='#fe424d';"><i class="fa-solid fa-heart"></i></button>
+              </div>
+              <div class="card-body">
+                <p class="card-text"><b><%= listing.title %></b></p>
+                <p class="card-text text-muted" style="font-size: 0.95rem; margin-bottom: 0.3rem;"><%= listing.location %>, <%= listing.country %></p>
+                <p class="card-text mb-0 mt-1">
+                  <span class="price fw-bold">
+                    &#8377; <%= (listing.price && listing.price.toLocaleString("en-IN")) || '0' %>
+                  </span> <span class="text-muted">night</span>
+                  <span class="tax-info mt-1">Total before taxes: &#8377; <%= ((listing.price || 0) * 5).toLocaleString("en-IN") %> + 18% GST</span>
+                </p>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     <% } %>
     </div>
-  </div>
 </div>
 </div>
  

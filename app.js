@@ -17,17 +17,24 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 
-// const dbUrl = process.env.NODE_ENV !== "production" ? "mongodb://127.0.0.1:27017/wanderlust" : process.env.ATLASDB_URL;
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl = process.env.NODE_ENV !== "production" ? "mongodb://127.0.0.1:27017/wanderlust" : process.env.ATLASDB_URL;
 // MongoDB connection
 async function main() {
   if (!dbUrl) {
     throw new Error("ATLASDB_URL environment variable is not set!");
   }
-  await mongoose.connect(dbUrl);
-  console.log(`Connected to MongoDB Atlas successfully!`);
+  await mongoose.connect(dbUrl, { serverSelectionTimeoutMS: 5000 });
+  console.log(`Connected to MongoDB successfully!`);
 }
-main().catch(err => console.error("MongoDB Connection Error:", err));
+main().catch(err => {
+    console.error("\n=================================");
+    console.error("🚨 MongoDB Connection Error 🚨");
+    console.error("=================================");
+    console.error(err.message);
+    console.error("\nIf you are using MongoDB Atlas, make sure your CURRENT IP ADDRESS is added to the Network Access Allowlist in your Atlas Dashboard.");
+    console.error("=================================\n");
+    process.exit(1);
+});
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"/views"));
@@ -130,6 +137,9 @@ app.use((req, res, next) => {
 
 // error handler middleware (must come last)
 app.use((err, req, res, next) => {
+    if (res.headersSent) {
+        return next(err);
+    }
     const { statusCode = 500, message = "Something went wrong" } = err;
     console.error(err); // log full error for debugging
     res.locals.success = req.flash ? req.flash("success") : [];
