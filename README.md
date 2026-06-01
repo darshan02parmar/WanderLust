@@ -1,159 +1,130 @@
-# 🌍 WanderLust
+<div align="center">
+  <h1>🌍 WanderLust</h1>
+  <p><strong>An ultra-premium, full-stack travel booking platform inspired by Airbnb.</strong></p>
+  
+  [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](#)
+  [![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](#)
+  [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](#)
+  [![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](#)
+  
+  [Live Demo](https://wanderlust-750d.onrender.com/) • [Report Bug](#) • [Request Feature](#)
+</div>
 
-**WanderLust** is a full-stack web application inspired by platforms like Airbnb, where users can explore, list, and manage travel accommodations.  
-The project focuses on **real-world CRUD operations, authentication, authorization, and RESTful architecture**.
+<br />
 
-🔗 **Live Demo:** https://wanderlust-750d.onrender.com/  
-🔗 **GitHub Repository:** https://github.com/darshan02parmar/WanderLust
+**WanderLust** is a high-end web application where users can seamlessly explore, list, and manage travel accommodations. Upgraded with a **stunning glassmorphic UI**, sleek micro-animations, and responsive edge-to-edge grids, it provides a premium booking experience. 
 
----
-
-## 🚀 Features
-
-### 👤 User Authentication & Authorization
-
-- User signup and login
-- Secure session handling
-- Authorization for listing creation, editing, and deletion
-
-### 🏡 Listings Management
-
-- Create, edit, and delete travel listings
-- Upload images for listings
-- View listing details with descriptions and pricing
-
-### 💬 Reviews & Ratings
-
-- Add reviews to listings
-- Star-based rating system
-- Only authenticated users can post reviews
-- Review ownership validation
-
-### 📍 Location-Based Listings
-
-- Each listing includes location and country
-- Map integration-ready structure
-
-### 🔐 Security & Validation
-
-- Server-side data validation
-- Ownership checks for listings and reviews
-- Protected routes
+The project demonstrates robust full-stack capabilities including **real-world CRUD operations, authentication, authorization, interactive mapping, and a RESTful architecture.**
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Key Features
 
-### **Frontend**
+### 🎨 Premium UI/UX Design
+- **Glassmorphism Aesthetics:** Beautiful frosted glass containers, dynamic floating navbars, and soft shadow rendering.
+- **Dynamic Grid System:** Edge-to-edge fluid layouts that scale perfectly on ultra-wide monitors.
+- **Micro-Interactions:** Smooth CSS hover transitions, image scale-zooming, and elegant button states.
 
-- HTML5
-- CSS3
-- Bootstrap
-- EJS (Embedded JavaScript Templates)
+### 🔐 Authentication & Security
+- Secure local authentication strategy via **Passport.js**.
+- Encrypted user sessions & cookie management.
+- Server-side authorization verifying listing/review ownership before enabling modifications.
 
-### **Backend**
+### 🏡 Listing & Booking Management
+- Complete CRUD functionality for travel properties.
+- **Cloudinary Integration:** Reliable, optimized remote image uploading for property photos.
+- Real-time tax calculation toggles (pre-tax vs. post-tax pricing views).
+- Dynamic category filtering (Mountains, Beach, Arctic, Castles, etc.).
 
-- Node.js
-- Express.js
-
-### **Database**
-
-- MongoDB
-- Mongoose ODM
-
-### **Authentication & Utilities**
-
-- Passport.js
-- Express-Session
-- Method-Override
-- Connect-Flash
-
-### **Deployment**
-
-- Render (Backend & App Hosting)
+### 🗺️ Interactive Maps & Reviews
+- **Geolocation & Mapping:** Integrated map rendering pin-pointing the exact coordinates of the property.
+- **Review System:** Authenticated users can leave 1-5 star ratings and detailed reviews, visualized in elegant bubble cards.
 
 ---
 
-## 📂 Project Structure
+## 🛠️ Technology Stack
 
-```
+| Category | Technologies |
+| :--- | :--- |
+| **Frontend** | HTML5, CSS3, EJS (Embedded JavaScript), Bootstrap 5, FontAwesome |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB, Mongoose ODM |
+| **Security & Auth**| Passport.js, Express-Session, Joi (Data Validation) |
+| **Cloud & APIs** | Cloudinary (Image Hosting), Leaflet/Mapbox (Maps) |
+| **Deployment** | Render |
+
+---
+
+## 📂 Project Architecture
+
+```text
 WanderLust/
-│
-├── models/ # Mongoose schemas
-├── routes/ # Express routes
-├── controllers/ # Route logic
-├── views/ # EJS templates
-├── public/ # Static files (CSS, JS)
-├── middleware/ # Custom middleware
-├── utils/ # Helper functions
-├── app.js # Main application file
-└── package.json
+├── models/         # Mongoose DB schemas (Listing, Review, User)
+├── routes/         # Express router endpoints
+├── controllers/    # Core business logic for routes
+├── views/          # EJS templates & dynamic UI layouts
+├── public/         # Static assets (Custom CSS, Client-side JS, Images)
+├── middleware/     # Auth checks, validation middleware
+├── utils/          # Error handling & async wrappers
+├── app.js          # Application entry point
+└── package.json    # Dependencies & scripts
 ```
 
 ---
 
-## ⚙️ Installation & Setup (Local)
+## 🚀 Installation & Setup (Local Development)
 
 ### 1️⃣ Clone the repository
-
 ```bash
 git clone https://github.com/darshan02parmar/WanderLust.git
 cd WanderLust
 ```
 
 ### 2️⃣ Install dependencies
-
 ```bash
 npm install
 ```
 
-### 3️⃣ Set Environment Variables
+### 3️⃣ Configure Environment Variables
+Create a `.env` file in the root directory and add your credentials:
+```env
+# Database
+ATLASDB_URL=your_mongodb_atlas_connection_string
+NODE_ENV=development
 
-Create a `.env` file and add:
+# Security
+SECRET=your_super_secret_session_key
 
+# Cloudinary (Image Storage)
+CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_KEY=your_cloudinary_api_key
+CLOUDINARY_SECRET=your_cloudinary_api_secret
 ```
-MONGO_URI=your_mongodb_connection_string
-SESSION_SECRET=your_secret_key
-```
 
-### 4️⃣ Run the application
-
+### 4️⃣ Boot the server
 ```bash
-npm start
+npm run dev
+# OR
+node app.js
 ```
 
-Visit:  
-http://localhost:3000
+Visit the application at: **`http://localhost:8080`**
 
 ---
 
 ## 🎯 Learning Outcomes
-
-- Built a complete full-stack web application
-- Hands-on experience with MVC architecture
-- Implemented authentication & authorization
-- Worked with MongoDB relationships
-- Learned secure backend development
-- Real-world CRUD + REST principles
-
----
-
-## 📌 Future Improvements
-
-- Image upload using Cloudinary
-- Interactive maps integration
-- Search and filter listings
-- Booking functionality
-- Responsive UI improvements
+Building WanderLust provided immense practical experience in:
+- Architecting a complete full-stack web application from scratch.
+- Mastering the **Model-View-Controller (MVC)** design pattern.
+- Building secure, stateful user sessions and role-based permissions.
+- Upgrading standard frameworks (Bootstrap) with **custom, high-end CSS aesthetics**.
+- Integrating third-party cloud services (Cloudinary, Geocoding APIs).
 
 ---
 
 ## 👨‍💻 Author
 
-Darshan Parmar  
+**Darshan Parmar**
+- 🔗 GitHub: [@darshan02parmar](https://github.com/darshan02parmar)
 
-🔗 GitHub: https://github.com/darshan02parmar
-
-⭐ If you like this project, consider giving it a star on GitHub!
-
-
+⭐ **If you found this project helpful or inspiring, please consider giving it a star on GitHub!**
