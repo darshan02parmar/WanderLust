@@ -50,3 +50,19 @@ document.addEventListener('DOMContentLoaded', () => {
     container.scrollBy({ left: SCROLL_AMOUNT, behavior: 'smooth' });
   });
 });
+
+// Button Loading State Logic
+document.addEventListener('DOMContentLoaded', () => {
+  const formsToLoad = document.querySelectorAll('form.needs-validation, form.booking-form');
+  
+  formsToLoad.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      if (form.checkValidity()) {
+        const submitBtn = form.querySelector('button[type="submit"], .reserve-btn');
+        if (submitBtn) {
+          submitBtn.classList.add('btn-loading');
+        }
+      }
+    });
+  });
+});

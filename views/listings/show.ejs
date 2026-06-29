@@ -174,7 +174,19 @@
           </form>
         </div>
       <% } else { %>
-        <button class="reserve-btn py-3 rounded-pill">Reserve</button>
+        <form class="booking-form mb-3">
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <label class="form-label fw-bold" style="font-size: 0.85rem;">CHECK-IN</label>
+                    <input type="text" class="form-control bg-white datepicker" placeholder="Add date" required>
+                </div>
+                <div class="col-6">
+                    <label class="form-label fw-bold" style="font-size: 0.85rem;">CHECKOUT</label>
+                    <input type="text" class="form-control bg-white datepicker" placeholder="Add date" required>
+                </div>
+            </div>
+            <button type="submit" class="reserve-btn py-3 rounded-pill w-100">Reserve</button>
+        </form>
         <p class="text-center text-muted mt-3 mb-0" style="font-size: 0.9rem;">You won't be charged yet</p>
         
         <div class="mt-4 pt-4 border-top">
@@ -241,7 +253,7 @@ if (listingCoordinates && listingCoordinates[0] && listingCoordinates[1]) {
   // Custom premium marker using font-awesome
   const customIcon = L.divIcon({
     className: 'custom-map-marker',
-    html: '<div style="background: #fe424d; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(254,66,77,0.4);"><i class="fa-solid fa-house"></i></div>',
+    html: '<div class="map-pulse" style="background: #fe424d; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(254,66,77,0.4);"><i class="fa-solid fa-house"></i></div>',
     iconSize: [40, 40],
     iconAnchor: [20, 20],
     popupAnchor: [0, -20]
@@ -267,5 +279,17 @@ if (listingCoordinates && listingCoordinates[0] && listingCoordinates[1]) {
     alert('Could not determine your location.');
   });
 }
+</script>
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if(typeof flatpickr !== 'undefined') {
+            flatpickr(".datepicker", {
+                minDate: "today",
+                dateFormat: "Y-m-d",
+                theme: "airbnb"
+            });
+        }
+    });
 </script>
 </div>

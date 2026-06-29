@@ -1,16 +1,45 @@
 <% if(success && success.length > 0){ %>
-<div class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
-    <%= success %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if(typeof Toastify !== 'undefined') {
+            Toastify({
+                text: "<%= success %>",
+                duration: 3000,
+                close: true,
+                gravity: "bottom",
+                position: "right",
+                style: {
+                    background: "var(--primary)",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)"
+                }
+            }).showToast();
+        }
+    });
+</script>
 <% } %>
 
 <% if(error && error.length > 0){ %>
-<div class="alert alert-danger alert-dismissible fade show col-6 offset-3" role="alert">
-    <%= error %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if(typeof Toastify !== 'undefined') {
+            Toastify({
+                text: "<%= error %>",
+                duration: 4000,
+                close: true,
+                gravity: "bottom",
+                position: "right",
+                style: {
+                    background: "var(--accent)",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)"
+                }
+            }).showToast();
+        }
+    });
+</script>
 <% } %>
-
-
-

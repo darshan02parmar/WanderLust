@@ -20,6 +20,7 @@
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
 /* Base & Scrollbars */
 body {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
@@ -714,4 +715,187 @@ footer {
         margin-top: 2rem;
         position: static;
     }
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+  background: #f6f7f8;
+  background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-repeat: no-repeat;
+  background-size: 1000px 100%;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards; 
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+}
+
+
+.img-container.skeleton img {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+.img-container img.loaded {
+  opacity: 1;
+}
+
+/* Button Loading Spinner */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+  color: transparent !important;
+}
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  border: 3px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: button-loading-spinner 1s linear infinite;
+}
+@keyframes button-loading-spinner {
+  from { transform: rotate(0turn); }
+  to { transform: rotate(1turn); }
+}
+
+/* Map Pulse Animation */
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  80%, 100% { transform: scale(2.5); opacity: 0; }
+}
+.map-pulse {
+  position: relative;
+}
+.map-pulse::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  display: block;
+  width: 100%; height: 100%;
+  background-color: var(--accent);
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* --- NEW HOMEPAGE UI COMPONENTS --- */
+
+/* Hero Banner */
+.hero-banner {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 0 20px;
+    margin-bottom: 2rem;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.8s ease forwards;
+}
+.hero-subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    animation: fadeInUp 1s ease forwards;
+}
+.hero-btn {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 15px var(--accent-glow);
+    animation: fadeInUp 1.2s ease forwards;
+}
+.hero-btn:hover {
+    background: #e0323c;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+/* Premium Badges */
+.premium-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    color: #111;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.premium-badge.luxury {
+    background: rgba(30, 30, 30, 0.85);
+    color: #ffd700;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    margin: 2rem auto;
+    max-width: 600px;
+}
+.empty-state-icon {
+    font-size: 4rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+.empty-state-title {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+.empty-state-desc {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
 }
