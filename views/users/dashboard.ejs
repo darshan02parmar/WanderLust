@@ -1,0 +1,165 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container my-5 px-lg-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0">Host Dashboard</h2>
+        <a href="/listings/new" class="btn btn-dark rounded-pill fw-bold">Create New Listing</a>
+    </div>
+
+    <!-- Analytics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-white-50 fw-bold m-0">TOTAL REVENUE</h6>
+                    <i class="fa-solid fa-indian-rupee-sign opacity-50"></i>
+                </div>
+                <h3 class="fw-bold m-0">&#8377; <%= totalRevenue.toLocaleString('en-IN') %></h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-light p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-muted fw-bold m-0">UPCOMING GUESTS</h6>
+                    <i class="fa-solid fa-calendar-day text-muted opacity-50"></i>
+                </div>
+                <h3 class="fw-bold m-0"><%= upcomingGuests.length %></h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-light p-4 border border-success border-2">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-success fw-bold m-0">CURRENT GUESTS</h6>
+                    <i class="fa-solid fa-house-user text-success opacity-50"></i>
+                </div>
+                <h3 class="fw-bold text-success m-0"><%= currentGuests.length %></h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-light p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-muted fw-bold m-0">COMPLETED</h6>
+                    <i class="fa-solid fa-check-double text-muted opacity-50"></i>
+                </div>
+                <h3 class="fw-bold m-0"><%= completedBookings.length %></h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Chart -->
+    <div class="card border-0 shadow-sm rounded-4 mb-5 p-4">
+        <h5 class="fw-bold mb-4">Revenue Overview</h5>
+        <div style="height: 300px; width: 100%;">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <h4 class="fw-bold mb-3">Upcoming Reservations</h4>
+    <% if(upcomingGuests.length === 0) { %>
+        <div class="text-center py-5 border rounded-4 bg-light">
+            <p class="text-muted m-0">You have no upcoming guests.</p>
+        </div>
+    <% } else { %>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle border">
+                <thead class="table-light">
+                    <tr>
+                        <th>Listing</th>
+                        <th>Dates</th>
+                        <th>Guests</th>
+                        <th>Payout</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(let booking of upcomingGuests) { %>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="<%= booking.listing.image.url %>" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                    <span class="fw-bold" style="font-size: 0.9rem;"><%= booking.listing.title %></span>
+                                </div>
+                            </td>
+                            <td class="small">
+                                <%= booking.checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %> - 
+                                <%= booking.checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+                            </td>
+                            <td><%= booking.guests %></td>
+                            <td class="fw-bold">&#8377; <%= (booking.totalPrice - booking.serviceFee - booking.tax).toLocaleString('en-IN') %></td>
+                            <td><span class="badge bg-success rounded-pill px-3">Confirmed</span></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    <% } %>
+</div>
+
+<!-- Chart Data Injection -->
+<script id="chart-data" type="application/json">
+<%- JSON.stringify(completedBookings.map(b => ({ date: b.checkOut, amount: b.totalPrice - b.serviceFee - b.tax }))) %>
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('revenueChart');
+    if(ctx) {
+        // Parse data safely to avoid IDE syntax errors
+        const dataStr = document.getElementById('chart-data').textContent;
+        const completedBookings = JSON.parse(dataStr);
+        
+        // Group by month (last 6 months)
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        let monthlyRevenue = {};
+        
+        completedBookings.forEach(b => {
+            const date = new Date(b.date);
+            const key = months[date.getMonth()] + " " + date.getFullYear();
+            if(!monthlyRevenue[key]) monthlyRevenue[key] = 0;
+            monthlyRevenue[key] += b.amount;
+        });
+
+        // Dummy data fallback if no bookings
+        let labels = Object.keys(monthlyRevenue);
+        let data = Object.values(monthlyRevenue);
+        
+        if(labels.length === 0) {
+            labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+            data = [0, 0, 0, 0, 0, 0];
+        }
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: data,
+                    borderColor: '#fe424d',
+                    backgroundColor: 'rgba(254, 66, 77, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#fe424d',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5] },
+                        ticks: { callback: function(value) { return '₹' + value; } }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+});
+</script>

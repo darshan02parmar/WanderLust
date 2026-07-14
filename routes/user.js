@@ -5,7 +5,7 @@ const { userSchema } = require('../schema');
 const ExpressError = require('../utils/ExpressError');
 const wrapAsync = require('../utils/wrapAsync');
 const passport = require('passport');
-const {savedRedirectUrl} = require('../middleware');
+const {savedRedirectUrl, isLoggedIn} = require('../middleware');
 const usercontroller = require('../controllers/users');
 
 
@@ -30,5 +30,10 @@ router
 //Logout Route
 router.get("/logout", usercontroller.logout);
 
+// User Dashboard
+router.get("/trips", isLoggedIn, wrapAsync(usercontroller.getUserTrips));
+
+// Host Dashboard
+router.get("/dashboard", isLoggedIn, wrapAsync(usercontroller.getHostDashboard));
 
 module.exports = router;

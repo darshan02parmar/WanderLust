@@ -13,8 +13,11 @@
 
 <div class="row">
   <div class="col-12">
-    <div class="show-img-container">
-      <img src="<%= listing.image.url %>" alt="listing image" />
+    <div class="show-img-container" data-bs-toggle="modal" data-bs-target="#imageLightbox" style="cursor: pointer; position: relative; transition: all 0.3s ease;">
+      <img src="<%= listing.image.url %>" alt="listing image" class="listing-main-img" style="transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"/>
+      <div class="view-photo-btn position-absolute" style="bottom: 20px; right: 20px; background: rgba(0,0,0,0.75); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px);">
+        <i class="fa-solid fa-expand me-1"></i> View Photo
+      </div>
     </div>
   </div>
 </div>
@@ -153,77 +156,106 @@
         </div>
       <% } %>
     </div>
+      
+      <!-- Map Section -->
+      <div class="mt-5 pt-4 border-top">
+        <h4 class="fw-bold mb-2">Where you'll be</h4>
+        <p class="text-muted mb-4"><%= listing.location %>, <%= listing.country %></p>
+        
+        <div class="map-wrapper mb-5">
+          <div id="map-controls">
+            <button id="locate-btn" type="button" class="locate-btn"><i class="fa-solid fa-location-crosshairs"></i> Locate</button>
+          </div>
+          <% if (listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates[0] && listing.geometry.coordinates[1]) { %>
+            <div id="map"></div>
+          <% } else { %>
+            <div class="alert alert-warning m-0 border-0 rounded-0 p-4 text-center">Location not available for this listing.</div>
+          <% } %>
+        </div>
+      </div>
+
   </div>
 
   <div class="col-lg-4 mt-5 mt-lg-0">
-    <!-- Right Column: Booking Card & Map -->
+    <!-- Right Column: Booking Card -->
     <div class="booking-card">
       <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
         <div>
           <span class="booking-price">&#8377; <%= listing.price.toLocaleString("en-IN") %></span>
           <span class="text-muted">night</span>
         </div>
-        <div class="fw-bold fs-5"><i class="fa-solid fa-star"></i> 4.9</div>
+        <% if (listing.reviews && listing.reviews.length > 0) { %>
+          <span class="fw-bold text-dark"><i class="fa-solid fa-star"></i> 4.9</span>
+        <% } %>
       </div>
       
       <% if(typeof currUser !== 'undefined' && currUser && currUser._id.equals(listing.owner._id)) { %>
-        <div class="d-flex flex-column gap-3 mt-4">
-          <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark w-100 py-3 fw-bold rounded-pill shadow-sm">Edit Listing</a>
-          <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
+        <div class="alert alert-info border-0 rounded-4">
+          You are the owner of this listing. You cannot book your own property.
+        </div>
+        <div class="d-flex gap-2 mt-4">
+          <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark w-100 py-3 fw-bold rounded-pill">Edit Listing</a>
+          <form action="/listings/<%= listing._id %>?_method=DELETE" method="post" class="w-100">
             <button type="submit" class="btn btn-outline-danger w-100 py-3 fw-bold rounded-pill">Delete Listing</button>
           </form>
         </div>
       <% } else { %>
-        <form class="booking-form mb-3">
+        <form action="/bookings" method="POST" class="booking-form mb-3" id="booking-form">
+            <input type="hidden" name="booking[listingId]" value="<%= listing._id %>">
             <div class="row g-2 mb-3">
                 <div class="col-6">
                     <label class="form-label fw-bold" style="font-size: 0.85rem;">CHECK-IN</label>
-                    <input type="text" class="form-control bg-white datepicker" placeholder="Add date" required>
+                    <input type="text" name="booking[checkIn]" id="checkin" class="form-control bg-white datepicker" placeholder="Add date" required>
                 </div>
                 <div class="col-6">
                     <label class="form-label fw-bold" style="font-size: 0.85rem;">CHECKOUT</label>
-                    <input type="text" class="form-control bg-white datepicker" placeholder="Add date" required>
+                    <input type="text" name="booking[checkOut]" id="checkout" class="form-control bg-white datepicker" placeholder="Add date" required>
+                </div>
+                <div class="col-12 mt-2">
+                    <label class="form-label fw-bold" style="font-size: 0.85rem;">GUESTS</label>
+                    <input type="number" name="booking[guests]" class="form-control bg-white" placeholder="1 guest" min="1" max="10" value="1" required>
                 </div>
             </div>
-            <button type="submit" class="reserve-btn py-3 rounded-pill w-100">Reserve</button>
+            <button type="submit" class="reserve-btn py-3 rounded-pill w-100" id="reserve-btn">Reserve</button>
         </form>
-        <p class="text-center text-muted mt-3 mb-0" style="font-size: 0.9rem;">You won't be charged yet</p>
+        <p class="text-center text-muted mt-3 mb-0" style="font-size: 0.9rem;" id="charge-text">You won't be charged yet</p>
         
-        <div class="mt-4 pt-4 border-top">
+        <div id="price-breakdown" class="mt-4 pt-4 border-top" style="display: none;">
             <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">&#8377; <%= listing.price.toLocaleString("en-IN") %> x 5 nights</span>
-                <span>&#8377; <%= ((listing.price || 0) * 5).toLocaleString("en-IN") %></span>
+                <span class="text-muted"><span id="price-per-night">&#8377; <%= listing.price.toLocaleString("en-IN") %></span> x <span id="night-count">0</span> nights</span>
+                <span id="base-price">&#8377; 0</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">Cleaning fee</span>
-                <span>&#8377; 1,200</span>
+                <span>&#8377; 800</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">WanderLust service fee</span>
+                <span id="service-fee">&#8377; 0</span>
             </div>
             <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
-                <span class="text-muted">WanderLust service fee</span>
-                <span>&#8377; 3,500</span>
+                <span class="text-muted">Taxes</span>
+                <span id="taxes">&#8377; 0</span>
             </div>
             <div class="d-flex justify-content-between fw-bold fs-5">
                 <span>Total before taxes</span>
-                <span>&#8377; <%= ((listing.price || 0) * 5 + 1200 + 3500).toLocaleString("en-IN") %></span>
+                <span id="total-price">&#8377; 0</span>
             </div>
         </div>
       <% } %>
     </div>
+  </div>
+</div>
 
-    <!-- Map Section -->
-    <div class="mt-5 pt-4">
-      <h4 class="fw-bold mb-2">Where you'll be</h4>
-      <p class="text-muted mb-4"><%= listing.location %>, <%= listing.country %></p>
-      
-      <div class="map-wrapper">
-        <div id="map-controls">
-          <button id="locate-btn" type="button" class="locate-btn"><i class="fa-solid fa-location-crosshairs"></i> Locate</button>
-        </div>
-        <% if (listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates[0] && listing.geometry.coordinates[1]) { %>
-          <div id="map"></div>
-        <% } else { %>
-          <div class="alert alert-warning m-0 border-0 rounded-0 p-4 text-center">Location not available for this listing.</div>
-        <% } %>
+<!-- Fullscreen Image Lightbox Modal -->
+<div class="modal fade" id="imageLightbox" tabindex="-1" aria-labelledby="imageLightboxLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+    <div class="modal-content bg-dark border-0">
+      <div class="modal-header border-0 position-absolute w-100 z-3 p-4" style="top:0; left:0;">
+        <button type="button" class="btn-close btn-close-white ms-auto bg-white rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close" style="opacity: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.5);"></button>
+      </div>
+      <div class="modal-body p-0 d-flex justify-content-center align-items-center position-relative">
+        <img src="<%= listing.image.url %>" class="img-fluid rounded-4" style="max-height: 90vh; max-width: 90vw; object-fit: contain; box-shadow: 0 10px 50px rgba(0,0,0,0.5);" alt="Fullscreen Image">
       </div>
     </div>
   </div>
@@ -283,12 +315,52 @@ if (listingCoordinates && listingCoordinates[0] && listingCoordinates[1]) {
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const bookedRanges = <%- JSON.stringify(bookings.map(b => ({ from: b.checkIn, to: b.checkOut }))) %>;
+        const pricePerNight = <%= listing.price %>;
+
         if(typeof flatpickr !== 'undefined') {
             flatpickr(".datepicker", {
                 minDate: "today",
                 dateFormat: "Y-m-d",
-                theme: "airbnb"
+                theme: "airbnb",
+                disable: bookedRanges,
+                static: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    calculatePrice();
+                }
             });
+        }
+
+        function calculatePrice() {
+            const checkin = document.getElementById("checkin").value;
+            const checkout = document.getElementById("checkout").value;
+            
+            if (checkin && checkout) {
+                const date1 = new Date(checkin);
+                const date2 = new Date(checkout);
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+                if (diffDays > 0) {
+                    document.getElementById("price-breakdown").style.display = "block";
+                    document.getElementById("night-count").innerText = diffDays;
+                    
+                    const basePrice = diffDays * pricePerNight;
+                    const cleaningFee = 800;
+                    const serviceFee = Math.round(basePrice * 0.1);
+                    const taxes = Math.round((basePrice + cleaningFee + serviceFee) * 0.18);
+                    const total = basePrice + cleaningFee + serviceFee + taxes;
+
+                    document.getElementById("base-price").innerText = "₹ " + basePrice.toLocaleString("en-IN");
+                    document.getElementById("service-fee").innerText = "₹ " + serviceFee.toLocaleString("en-IN");
+                    document.getElementById("taxes").innerText = "₹ " + taxes.toLocaleString("en-IN");
+                    document.getElementById("total-price").innerText = "₹ " + total.toLocaleString("en-IN");
+                } else {
+                    document.getElementById("price-breakdown").style.display = "none";
+                }
+            } else {
+                document.getElementById("price-breakdown").style.display = "none";
+            }
         }
     });
 </script>

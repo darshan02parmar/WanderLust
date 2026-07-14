@@ -171,13 +171,16 @@
                 <button class="wishlist-btn" onclick="event.preventDefault(); this.style.color='#fe424d';"><i class="fa-solid fa-heart"></i></button>
               </div>
               <div class="card-body">
-                <p class="card-text"><b><%= listing.title %></b></p>
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                    <p class="card-text mb-0"><b><%= listing.title %></b></p>
+                    <span class="text-dark" style="font-size: 0.95rem;"><i class="fa-solid fa-star small"></i> 4.9</span>
+                </div>
                 <p class="card-text text-muted" style="font-size: 0.95rem; margin-bottom: 0.3rem;"><%= listing.location %>, <%= listing.country %></p>
                 <p class="card-text mb-0 mt-1">
-                  <span class="price fw-bold">
+                  <span class="price fw-bold" data-base-price="<%= listing.price || 0 %>">
                     &#8377; <%= (listing.price && listing.price.toLocaleString("en-IN")) || '0' %>
                   </span> <span class="text-muted">night</span>
-                  <span class="tax-info mt-1">Total before taxes: &#8377; <%= ((listing.price || 0) * 5).toLocaleString("en-IN") %> + 18% GST</span>
+                  <span class="tax-info mt-1 d-none" style="font-size: 0.85rem; text-decoration: underline;">Total after taxes</span>
                 </p>
               </div>
             </div>
@@ -196,5 +199,33 @@
     <% } %>
 </div>
 </div>
- 
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const taxSwitch = document.getElementById("flexSwitchCheckDefault");
+    const priceElements = document.querySelectorAll(".price");
+    const taxInfos = document.querySelectorAll(".tax-info");
+
+    if(taxSwitch) {
+        taxSwitch.addEventListener("change", function() {
+            if(this.checked) {
+                // Show with tax (18% GST)
+                priceElements.forEach(el => {
+                    let basePrice = parseInt(el.getAttribute("data-base-price"));
+                    let priceWithTax = basePrice + (basePrice * 0.18);
+                    el.innerHTML = "&#8377; " + priceWithTax.toLocaleString("en-IN");
+                });
+                taxInfos.forEach(info => info.classList.remove("d-none"));
+            } else {
+                // Show base price
+                priceElements.forEach(el => {
+                    let basePrice = parseInt(el.getAttribute("data-base-price"));
+                    el.innerHTML = "&#8377; " + basePrice.toLocaleString("en-IN");
+                });
+                taxInfos.forEach(info => info.classList.add("d-none"));
+            }
+        });
+    }
+});
+</script>
 

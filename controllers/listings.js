@@ -24,7 +24,11 @@ module.exports.showListing=(async (req, res) => {
         req.flash("error","Listing you requested for does not exist!");
         return res.redirect("/listings");
     }
-    res.render("listings/show.ejs", { listing });
+
+    const Booking = require("../models/booking");
+    const bookings = await Booking.find({ listing: id, status: { $ne: "cancelled" } });
+
+    res.render("listings/show.ejs", { listing, bookings });
 });
 
 

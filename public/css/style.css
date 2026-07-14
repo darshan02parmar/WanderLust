@@ -319,10 +319,10 @@ footer {
     align-items: center;
     gap: 0.5rem;
     padding: 1rem 3rem;
-    background: var(--bg-page);
+    background: #fff;
     position: sticky;
-    top: 5.5rem;
-    z-index: 900;
+    top: 70px; /* Right below the 70px navbar */
+    z-index: 1019; /* Just under navbar 1020 */
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 .scroll-btn{

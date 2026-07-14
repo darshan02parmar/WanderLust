@@ -48,3 +48,41 @@ module.exports.logout=(req, res, next) => {
     res.redirect("/listings");
   });
 };
+
+// User Dashboard (Trips)
+module.exports.getUserTrips = async (req, res) => {
+  const Booking = require("../models/booking");
+  const bookings = await Booking.find({ user: req.user._id }).populate("listing").sort({ checkIn: 1 });
+  
+  const now = new Date();
+  
+  const upcomingTrips = bookings.filter(b => b.status === "confirmed" && b.checkIn >= now);
+  const pastTrips = bookings.filter(b => b.status === "completed" || (b.status === "confirmed" && b.checkOut < now));
+  const cancelledTrips = bookings.filter(b => b.status === "cancelled");
+
+  res.render("users/trips", { upcomingTrips, pastTrips, cancelledTrips });
+};
+
+// Host Dashboard (Analytics)
+module.exports.getHostDashboard = async (req, res) => {
+  const Listing = require("../models/listing");
+  const Booking = require("../models/booking");
+
+  const myListings = await Listing.find({ owner: req.user._id });
+  const listingIds = myListings.map(l => l._id);
+
+  const allBookings = await Booking.find({ listing: { $in: listingIds } }).populate("listing").sort({ checkIn: 1 });
+  
+  const now = new Date();
+  
+  const upcomingGuests = allBookings.filter(b => b.status === "confirmed" && b.checkIn >= now);
+  const currentGuests = allBookings.filter(b => b.status === "confirmed" && b.checkIn <= now && b.checkOut >= now);
+  const completedBookings = allBookings.filter(b => b.status === "completed" || (b.status === "confirmed" && b.checkOut < now));
+
+  // Calculate Revenue (Only for completed or current, not cancelled)
+  const totalRevenue = allBookings
+    .filter(b => b.status !== "cancelled")
+    .reduce((acc, curr) => acc + (curr.totalPrice - curr.serviceFee - curr.tax), 0); // Roughly price * nights + cleaning fee
+
+  res.render("users/dashboard", { upcomingGuests, currentGuests, completedBookings, totalRevenue });
+};

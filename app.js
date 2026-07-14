@@ -116,6 +116,9 @@ app.use("/listings/:id/reviews", reviews);
 const listings= require("./routes/listing.js"); // Express Router
 app.use("/listings", listings);
 
+const bookings = require("./routes/bookings.js"); // Express Router
+app.use("/bookings", bookings);
+
 // Root route - redirect to listings (must be before user routes mounted at "/")
 app.get("/", (req, res) => {
     res.redirect("/listings");
@@ -131,6 +134,7 @@ app.get("/testuser", (req, res) => {
 
 //if no route matches → 404 handler
 app.use((req, res, next) => {
+    console.log(`404 Page Not Found: ${req.originalUrl}`);
     next(new ExpressError("Page Not Found", 404));
 });
 
