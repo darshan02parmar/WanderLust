@@ -22,19 +22,26 @@ The project demonstrates robust full-stack capabilities including **real-world C
 
 ### 🎨 Premium UI/UX Design
 - **Glassmorphism Aesthetics:** Beautiful frosted glass containers, dynamic floating navbars, and soft shadow rendering.
+- **Interactive Lightbox:** Immersive, fullscreen modal galleries for viewing property photos in high resolution.
 - **Dynamic Grid System:** Edge-to-edge fluid layouts that scale perfectly on ultra-wide monitors.
-- **Micro-Interactions:** Smooth CSS hover transitions, image scale-zooming, and elegant button states.
+- **Micro-Interactions:** Smooth CSS hover transitions, image scale-zooming, interactive favicons, and elegant button states.
 
 ### 🔐 Authentication & Security
 - Secure local authentication strategy via **Passport.js**.
 - Encrypted user sessions & cookie management.
 - Server-side authorization verifying listing/review ownership before enabling modifications.
 
-### 🏡 Listing & Booking Management
+### 🏡 Listing Management
 - Complete CRUD functionality for travel properties.
 - **Cloudinary Integration:** Reliable, optimized remote image uploading for property photos.
 - Real-time tax calculation toggles (pre-tax vs. post-tax pricing views).
 - Dynamic category filtering (Mountains, Beach, Arctic, Castles, etc.).
+
+### 📅 Advanced Booking Engine
+- **Real-Time Booking Validation:** Full checkout system with check-in/check-out dates, guest selection, and automatic overlap prevention to avoid double bookings.
+- **Dynamic Pricing Calculator:** Instantly calculates total price including dynamic night counts, cleaning fees, and service taxes.
+- **User Dashboard (Trips):** Dedicated UI for users to view upcoming and past trips, check confirmation receipts, and cancel active reservations.
+- **Host Analytics Dashboard:** Visual revenue charts (Chart.js) and complete history of upcoming/completed guests for property owners.
 
 ### 🗺️ Interactive Maps & Reviews
 - **Geolocation & Mapping:** Integrated map rendering pin-pointing the exact coordinates of the property.
